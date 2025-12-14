@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Student Task Manager</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-tasks"></i>
+                <span>TaskManager</span>
+            </div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link active">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="tasks.html" class="nav-link">
+                    <i class="fas fa-list-check"></i> Tasks
+                </a>
+                <div class="nav-user">
+                    <span id="usernameDisplay">User</span>
+                    <button onclick="Auth.logout()" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>Welcome back, <span id="userGreeting">Student</span>! 👋</h1>
+            <p>Here's your task overview for today</p>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalTasks">0</h3>
+                    <p>Total Tasks</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="pendingTasks">0</h3>
+                    <p>Pending</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon completed">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="completedTasks">0</h3>
+                    <p>Completed</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon urgent">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="urgentTasks">0</h3>
+                    <p>Urgent</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="actions-grid">
+                <a href="tasks.html?action=add" class="action-card">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Add New Task</h3>
+                    <p>Create a new task</p>
+                </a>
+                <a href="tasks.html" class="action-card">
+                    <i class="fas fa-list"></i>
+                    <h3>View All Tasks</h3>
+                    <p>See all your tasks</p>
+                </a>
+                <div class="action-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Progress</h3>
+                    <p id="completionRate">0% complete</p>
+                </div>
+                <div class="action-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Today</h3>
+                    <p id="todayDate">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Tasks -->
+        <div class="recent-tasks">
+            <div class="section-header">
+                <h2>Recent Tasks</h2>
+                <a href="tasks.html" class="view-all">View All →</a>
+            </div>
+            <div id="recentTasksList" class="tasks-list">
+                <!-- Tasks will load here -->
+                <p class="empty-state">No tasks yet. <a href="tasks.html?action=add">Create your first task!</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="./assets/js/auth.js"></script>
+    <script src="./assets/js/taskManager.js"></script>
+    <script src="./assets/js/dashboard.js"></script>
+    <script>
+    // Force refresh dashboard when returning from tasks page
+    if (window.performance && window.performance.navigation.type === 2) {
+        // This is a back/forward navigation
+        setTimeout(() => {
+            if (typeof Dashboard !== 'undefined' && typeof Dashboard.loadDashboardData === 'function') {
+                Dashboard.loadDashboardData();
+            }
+        }, 500);
+    }
+
+    // Listen for storage changes (when tasks are updated in tasks.html)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'userTasks' && typeof Dashboard !== 'undefined') {
+            Dashboard.loadDashboardData();
+        }
+    });
+</script>
+</body>
+</html>
